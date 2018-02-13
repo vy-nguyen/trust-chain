@@ -1,0 +1,247 @@
+@startuml
+
+actor Document_Creator
+actor Content_Owner
+actor Content_CoOwner_1
+actor Content_CoOwner_2
+actor Content_CoOwner_3
+
+folder Confidential_Doc [
+    Strict Access Document
+    ---
+    Prev Chain Hash
+    Public Key
+    Signature
+    ---
+    Content Hash
+    Encrypted Immutable Content
+    ...
+    Accouting Hash
+    Accouting Content
+    ...
+    Dapp Owner Contract
+    ===
+    Access Control
+    ===
+    Owner Chain
+    Single mutable link
+    ===
+    Reference Links
+    Mutable links
+]
+
+folder Confidential_Doc_Owner [
+    Owner Copy of The Document
+    ---
+    Prev Chain Hash
+    Public Key
+    Signature
+    ---
+    Content Hash
+    Encrypted Immutable Content
+    ...
+    Accouting Hash
+    Accouting Content
+    ...
+    Dapp Owner Contract
+    ===
+    Owner Chain
+    Single mutable link
+]
+
+folder Confidential_Doc_CoOwner_1 [
+    CoOwner Copy of The Document
+    ---
+    Prev Chain Hash
+    Public Key
+    Signature
+    ---
+    Content Hash
+    Encrypted Immutable Content
+    ...
+    Accouting Hash
+    Accouting Content
+    ...
+    Dapp Owner Contract
+    ===
+    Owner Chain
+    Single mutable link
+]
+
+folder Confidential_Doc_CoOwner_2 [
+    CoOwner Copy of The Document
+    ---
+    Prev Chain Hash
+    Public Key
+    Signature
+    ---
+    Content Hash
+    Encrypted Immutable Content
+    ...
+    Accouting Hash
+    Accouting Content
+    ...
+    Dapp Owner Contract
+    ===
+    Owner Chain
+    Single mutable link
+]
+
+folder Confidential_Doc_CoOwner_3 [
+    CoOwner Copy of The Document
+    ---
+    Prev Chain Hash
+    Public Key
+    Signature
+    ---
+    Content Hash
+    Encrypted Immutable Content
+    ...
+    Accouting Hash
+    Accouting Content
+    ...
+    Dapp Owner Contract
+    ===
+    Owner Chain
+    Single mutable link
+]
+
+folder Contract_Doc [
+    Multi Party Contract Document
+    ---
+    Prev Chain Hash
+    ...
+]
+
+folder Immutable_Doc [
+    Immutable Public Document
+    ---
+    Prev Chain Hash
+    ...
+]
+
+folder Private_Doc [
+    Encrypted Private Document
+    ---
+    Prev Chain Hash
+    ...
+]
+
+file Private_BlkChain [
+    Genesis Private Records
+    ---
+    Genesis Records
+    ...
+]
+
+file Private_BlkChain_1 [
+    Genesis Private Records
+    ---
+    Genesis Records
+    ...
+]
+
+file Private_BlkChain_2 [
+    Genesis Private Records
+    ---
+    Genesis Records
+    ...
+]
+
+file Private_BlkChain_3 [
+    Genesis Private Records
+    ---
+    Genesis Records
+    ...
+]
+
+file Private_BlkChain_4 [
+    Genesis Private Records
+    ---
+    Genesis Records
+    ...
+]
+
+
+file Private_BlkChain_Tip [
+    Tip of the private blockchain
+    ---
+    Hash link
+    ...
+]
+
+file Private_BlkChain_Tip_1 [
+    Tip of the private blockchain
+    ---
+    Hash link
+    ...
+]
+
+file Private_BlkChain_Tip_2 [
+    Tip of the private blockchain
+    ---
+    Hash link
+    ...
+]
+
+file Private_BlkChain_Tip_3 [
+    Tip of the private blockchain
+    ---
+    Hash link
+    ...
+]
+
+file Private_BlkChain_Tip_4 [
+    Tip of the private blockchain
+    ---
+    Hash link
+    ...
+]
+
+Document_Creator --# Private_BlkChain
+Document_Creator --> Private_BlkChain_Tip
+
+Document_Creator .. Confidential_Doc
+Document_Creator .. Contract_Doc
+Document_Creator .. Immutable_Doc
+Document_Creator .. Private_Doc
+
+Private_BlkChain_Tip --> Confidential_Doc
+Confidential_Doc --> Contract_Doc
+Contract_Doc --> Immutable_Doc
+Immutable_Doc --> Private_Doc
+Private_Doc --> Private_BlkChain
+
+Content_Owner --# Private_BlkChain_1
+Content_CoOwner_1 --# Private_BlkChain_2
+Content_CoOwner_2 --# Private_BlkChain_3
+Content_CoOwner_3 --# Private_BlkChain_4
+
+Content_Owner --> Private_BlkChain_Tip_1
+Content_CoOwner_1 --> Private_BlkChain_Tip_2
+Content_CoOwner_2 --> Private_BlkChain_Tip_3
+Content_CoOwner_3 --> Private_BlkChain_Tip_4
+
+Private_BlkChain_Tip_1 --> Confidential_Doc_Owner
+Private_BlkChain_Tip_2 --> Confidential_Doc_CoOwner_1
+Private_BlkChain_Tip_3 --> Confidential_Doc_CoOwner_2
+Private_BlkChain_Tip_4 --> Confidential_Doc_CoOwner_3
+
+Confidential_Doc_Owner -->Private_BlkChain_1
+Confidential_Doc_CoOwner_1 --> Private_BlkChain_2
+Confidential_Doc_CoOwner_2 --> Private_BlkChain_3
+Confidential_Doc_CoOwner_3 --> Private_BlkChain_4
+
+Confidential_Doc_Owner --> Confidential_Doc
+Confidential_Doc --^ Confidential_Doc_Owner
+
+Confidential_Doc_CoOwner_1 --> Confidential_Doc_Owner
+Confidential_Doc_Owner --^ Confidential_Doc_CoOwner_1
+
+Confidential_Doc_CoOwner_2 --> Confidential_Doc_CoOwner_1
+Confidential_Doc_CoOwner_1 --^ Confidential_Doc_CoOwner_2
+
+Confidential_Doc_CoOwner_3 --> Confidential_Doc_CoOwner_2
+Confidential_Doc_CoOwner_2 --^ Confidential_Doc_CoOwner_3
+
+@enduml
