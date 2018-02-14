@@ -1,0 +1,4 @@
+[submodule "ethereumj"]
+	path = ethereumj
+	url = https://github.com/vy-nguyen/ethereumj.git
+	branch = master
