@@ -1,3 +1,14 @@
 *.png
 *.mwb
 .gradle
+
+*/.classpath
+*/.project
+
+build/*
+**/build/*
+.settings
+**/.settings
+
+cscope.*
+tags

@@ -1,0 +1,110 @@
+buildscript {
+    ext {
+    }
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'application'
+
+repositories {
+
+    mavenLocal()
+    mavenCentral()
+
+    maven {
+        url "http://dl.bintray.com/ethereum/maven"
+    }
+}
+
+applicationDefaultJvmArgs = [
+    "-Dsync.fast.enabled=true",
+    "-Dlogback.configurationFile=src/main/resources/logback.xml"
+]
+
+configurations.all {
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+dependencies {
+    compile ("org.springframework.boot:spring-boot-starter-web")
+
+    compile "com.google.guava:guava:18.0"
+    compile project(":ethereumj/ethereumj-core")
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = [
+                'src/main/java'
+            ]
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.0'
+}
+
+task stage {
+    dependsOn bootRepackage
+}
+
+bootRun {
+    jvmArgs = ["-server", "-Xms3g"]
+}
+
+mainClassName = 'com.ethercamp.starter.Application'
+
+springBoot {
+    mainClass = 'com.ethercamp.starter.Application'
+}
+
+task runMain() {
+    doLast {
+        addJvmArgIfEmpty "database.dir", getDatabaseDir("database")
+        addJvmArgIfEmpty "sync.fast.enabled", "true"
+        addJvmArgIfEmpty "ethereumj.conf.res", "ethereumj.conf"
+        addJvmArgIfEmpty "database.name", "database"
+        addJvmArgIfEmpty "networkProfile", "main"
+        bootRunWithNetworkConfig('main', false)
+    }
+}
+
+def bootRunWithNetworkConfig(String name, boolean includePresets) {
+    def newArgs = []
+
+    if (includePresets) {
+        addJvmArgIfEmpty "database.dir", getDatabaseDir("database-" + name)
+        newArgs.addAll([
+            '-Dethereumj.conf.res=' + name + '.conf',
+            '-Ddatabase.name=database-' + name,
+            '-DnetworkProfile=' + name]
+        )
+    }
+    // set heap size configure in task
+    if (!project.hasProperty('jvmArgs') || project.jvmArgs.indexOf('-Xmx') == -1) {
+        println('Set default heap size for task ' + maxHeapSize)
+        newArgs.add(maxHeapSize)
+    } else {
+        println('Using heap size from user input ' + project.jvmArgs)
+    }
+    bootRun.jvmArgs.addAll(newArgs)
+    println 'Running Java with ' + bootRun.jvmArgs
+
+    tasks.compileJava.execute()
+    tasks.bootRun.execute()
+}

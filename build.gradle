@@ -1,5 +1,16 @@
-apply plugin: 'java'
+subprojects {
+    apply plugin: 'eclipse'
 
-repositories {
-    jcenter()
+    repositories {
+        jcenter()
+        maven {
+            url "https://dl.bintray.com/ethereum/maven/"
+        }
+    }
+}
+
+allprojects {
+    tasks.withType(Javadoc).all {
+        enabled = false
+    }
 }

@@ -1,0 +1,33 @@
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+
+ext {
+    implTitle  = "Common Java Library"
+    version    = "0.10"
+    groupId    = "com.tvntd.lib"
+    artifactId = "common"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.json:json:20090211"
+    compile "ch.qos.logback:logback-classic:${logback_version}"
+
+    testCompile "junit:junit:${junit_version}"
+    testCompile "org.mockito:mockito-core:1.+"
+}
+
+test {
+    systemProperties 'TESTDATA': "${projectDir}/src/test/data"
+}
+
+eclipse {
+    wtp {
+        component {
+            contextPath = '/'
+        }
+    }
+}
