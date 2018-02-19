@@ -1,4 +1,11 @@
-package com.ethercamp.starter.ethereum;
+/*
+ *--------1---------2---------3---------4---------5---------6---------7---------8--------
+ * Copyright (c) 2018 by Vy Nguyen
+ * BSD License
+ *
+ * @author vynguyen
+ */
+package com.tvntd.trustchain.ethereum;
 
 import org.ethereum.core.Block;
 import org.ethereum.core.TransactionReceipt;
@@ -9,8 +16,8 @@ import org.ethereum.util.BIUtil;
 import java.math.BigInteger;
 import java.util.List;
 
-public class EthereumListener extends EthereumListenerAdapter {
-
+public class EthereumListener extends EthereumListenerAdapter
+{
     Ethereum ethereum;
     private boolean syncDone = false;
 
@@ -19,24 +26,23 @@ public class EthereumListener extends EthereumListenerAdapter {
     }
 
     @Override
-    public void onBlock(Block block, List<TransactionReceipt> receipts) {
+    public void onBlock(Block block, List<TransactionReceipt> receipts)
+    {
         System.out.println();
         System.out.println("Do something on block: " + block.getNumber());
 
-        if (syncDone)
+        if (syncDone) {
             calcNetHashRate(block);
-
+        }
         System.out.println();
     }
 
-
-
     /**
-     *  Mark the fact that you are touching
-     *  the head of the chain
+     *  Mark the fact that you are touching the head of the chain
      */
     @Override
-    public void onSyncDone(SyncState state) {
+    public void onSyncDone(SyncState state)
+    {
         System.out.println("onSyncDone " + state);
         if (!syncDone) {
             System.out.println(" ** SYNC DONE ** ");
@@ -48,29 +54,28 @@ public class EthereumListener extends EthereumListenerAdapter {
      * Just small method to estimate total power off all miners on the net
      * @param block
      */
-    private void calcNetHashRate(Block block){
-
-        if ( block.getNumber() > 1000){
-
+    private void calcNetHashRate(Block block)
+    {
+        if (block.getNumber() > 1000) {
             long avgTime = 1;
             long cumTimeDiff = 0;
             Block currBlock = block;
-            for (int i=0; i < 1000; ++i){
 
-                Block parent = ethereum.getBlockchain().getBlockByHash(currBlock.getParentHash());
+            for (int i=0; i < 1000; ++i) {
+                Block parent = ethereum.getBlockchain()
+                    .getBlockByHash(currBlock.getParentHash());
                 long diff = currBlock.getTimestamp() - parent.getTimestamp();
                 cumTimeDiff += Math.abs(diff);
                 currBlock = parent;
             }
-
             avgTime = cumTimeDiff / 1000;
 
-            BigInteger netHashRate = block.getDifficultyBI().divide(BIUtil.toBI(avgTime));
-            double hashRate = netHashRate.divide(new BigInteger("1000000000")).doubleValue();
+            BigInteger netHashRate = block.getDifficultyBI()
+                .divide(BIUtil.toBI(avgTime));
+            double hashRate =
+                netHashRate.divide(new BigInteger("1000000000")).doubleValue();
 
             System.out.println("Net hash rate: " + hashRate + " GH/s");
         }
-
     }
-
 }

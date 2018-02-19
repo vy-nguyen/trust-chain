@@ -67,10 +67,10 @@ bootRun {
     jvmArgs = ["-server", "-Xms3g"]
 }
 
-mainClassName = 'com.ethercamp.starter.Application'
+mainClassName = 'com.tvntd.trustchain.Application'
 
 springBoot {
-    mainClass = 'com.ethercamp.starter.Application'
+    mainClass = 'com.tvntd.trustchain.Application'
 }
 
 task runMain() {

@@ -8,7 +8,6 @@
             <level>DEBUG</level>
         </filter>
 
-
         <append>true</append>
         <encoder>
             <pattern>%date{HH:mm:ss.SSS} %-5level [%logger{35}] %msg%n</pattern>
@@ -16,7 +15,8 @@
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/ethereum-%d{yyyy-MM-dd_HH}.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
             <maxHistory>30</maxHistory>
@@ -24,7 +24,6 @@
     </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
         </filter>
@@ -63,6 +62,5 @@
     <logger level="ERROR" name="state"/>
     <logger level="ERROR" name="execute"/>
     <logger level="ERROR" name="rlp"/>
-
 
 </configuration>
