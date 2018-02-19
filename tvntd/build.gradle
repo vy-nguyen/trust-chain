@@ -41,8 +41,14 @@ configurations.all {
 dependencies {
     compile ("org.springframework.boot:spring-boot-starter-web")
 
+    compile "org.springframework.security:spring-security-web:${spring_security_ver}"
+    compile "org.springframework.security:spring-security-config:${spring_security_ver}"
+         
     compile "com.google.guava:guava:18.0"
+
     compile project(":ethereumj/ethereumj-core")
+    compile files(new File(project.rootDir,
+        "/ethereumj/ethereumj-core/build/libs/ethereumj-core-1.6.3-SNAPSHOT.jar"))
 }
 
 sourceSets {
@@ -53,6 +59,10 @@ sourceSets {
             ]
         }
     }
+}
+
+task printVar() {
+    println ">> Project dir " +  project.rootDir
 }
 
 task wrapper(type: Wrapper) {

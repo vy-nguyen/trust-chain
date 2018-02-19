@@ -32,7 +32,6 @@ public class MyRestController
     @ResponseBody
     public String getBestBlock() throws IOException
     {
-        System.out.println("Get best block...");
         return ethereumBean.getBestBlock();
     }
 }
