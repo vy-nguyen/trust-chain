@@ -13,13 +13,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+/*
 @ComponentScan(
     basePackages = "org.ethereum",
     excludeFilters = @ComponentScan.Filter(NoAutoscan.class)
 )
-public class EthereumConfig extends CommonConfig
+*/
+public class EthereumConfig // extends CommonConfig
 {
     public EthereumConfig() {
-        super();
+        // super();
     }
 }

@@ -1,6 +1,12 @@
 *.png
 *.mwb
 .gradle
+.idea
+gradle/*
+tvntd/.idea
+tvntd/gradle/*
+tvntd/database/*
+tvntd/logs
 
 */.classpath
 */.project
