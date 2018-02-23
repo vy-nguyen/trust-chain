@@ -1,20 +1,19 @@
 *.png
 *.mwb
-.gradle
-.idea
-gradle/*
-tvntd/.idea
-tvntd/gradle/*
-tvntd/database/*
-tvntd/logs
 
-*/.classpath
-*/.project
-
-build/*
+**/gradlew.bat
+**/database
 **/build/*
-.settings
+**/bin/
+**/out/
+**/gradle/
+**/logs
+
+**/.idea
 **/.settings
+**/.gradle
+**/.classpath
+**/.project
 
 cscope.*
 tags
