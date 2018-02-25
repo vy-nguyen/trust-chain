@@ -9,21 +9,23 @@ package com.tvntd.trustchain.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-import com.tvntd.trustchain.ethereum.EthereumBean;
+import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImplExporter;
 
-import java.util.concurrent.Executors;
-
-// @Configuration
+@Configuration
 public class Config
 {
-    // @Bean
-    EthereumBean ethereumBean() throws Exception
-    {
-        EthereumBean ethereumBean = new EthereumBean();
-        Executors.newSingleThreadExecutor().submit(ethereumBean::start);
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyPlaceHolderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
-        System.out.println("Create ethereum bean " + ethereumBean);
-        return ethereumBean;
+    @Bean
+    public static AutoJsonRpcServiceImplExporter exporter()
+    {
+        AutoJsonRpcServiceImplExporter jsonRpc = new AutoJsonRpcServiceImplExporter();
+
+        return jsonRpc;
     }
 }

@@ -43,13 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         // @formatter:off
         http.authorizeRequests()
             .antMatchers(
-                    "/",
-                    "/rs/**",
-                    "/login/**",
-                    "/register/**",
-                    "/public/**",
-                    "/api/**",
-                    "/help/**"
+                "/",
+                "/rs/**",
+                "/rpc/**",
+                "/api/**",
+                "/login/**",
+                "/register/**",
+                "/public/**",
+                "/help/**"
             ).permitAll()
             .antMatchers("/user/**").hasRole(Constants.User)
             .antMatchers("/admin/**").hasRole(Constants.Admin)
@@ -80,7 +81,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
             .and()
                 .rememberMe()
             .and()
-                .csrf();
+                .csrf()
+                .ignoringAntMatchers(
+                    "/api/**",
+                    "/rpc/**",
+                    "/public/**",
+                    "/login/**",
+                    "/help/**"
+                );
         // @formatter:on
     }
 }

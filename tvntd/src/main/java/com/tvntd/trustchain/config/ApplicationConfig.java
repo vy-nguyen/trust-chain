@@ -23,6 +23,7 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @ComponentScan(basePackages = {
     "com.tvntd.controller",
+    "com.tvntd.service",
     "com.tvntd.security"
 })
 public class ApplicationConfig extends WebMvcConfigurerAdapter
