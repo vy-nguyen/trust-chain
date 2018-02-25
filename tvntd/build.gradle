@@ -41,7 +41,9 @@ configurations.all {
 }
 
 dependencies {
-    compile ("org.springframework.boot:spring-boot-starter-web")
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-websocket"
+    compile "javax.servlet:jstl:1.2"
 
     compile "org.springframework.security:spring-security-web:${spring_security_ver}"
     compile "org.springframework.security:spring-security-config:${spring_security_ver}"

@@ -9,4 +9,12 @@ package com.tvntd.trustchain.util;
 
 public class Constants
 {
+    public static final String User        = "User";
+    public static final String Admin       = "Admin";
+    public static final String Dba         = "Dba";
+    public static final String Auditor     = "Auditor";
+    public static final String AuthUser    = "ROLE_" + User;
+    public static final String AuthAdmin   = "ROLE_" + Admin;
+    public static final String AuthDba     = "ROLE_" + Dba;
+    public static final String AuthAuditor = "ROLE_" + Auditor;
 }

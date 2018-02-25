@@ -14,10 +14,10 @@ import com.tvntd.trustchain.ethereum.EthereumBean;
 
 import java.util.concurrent.Executors;
 
-@Configuration
+// @Configuration
 public class Config
 {
-    @Bean
+    // @Bean
     EthereumBean ethereumBean() throws Exception
     {
         EthereumBean ethereumBean = new EthereumBean();
