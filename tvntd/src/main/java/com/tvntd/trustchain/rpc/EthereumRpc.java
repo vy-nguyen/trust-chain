@@ -7,6 +7,8 @@
  */
 package com.tvntd.trustchain.rpc;
 
+import org.ethereum.jsonrpc.JsonRpc.BlockResult;
+
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.JsonRpcService;
 
@@ -20,4 +22,8 @@ public interface EthereumRpc
     }
 
     Account ether_account(@JsonRpcParam(value="name") String name);
+
+    BlockResult eth_getBlockByNumber(
+            @JsonRpcParam(value = "id") String bnOrId,
+            @JsonRpcParam(value = "full") Boolean full) throws Exception;
 }

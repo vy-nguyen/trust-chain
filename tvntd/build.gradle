@@ -72,10 +72,6 @@ sourceSets {
     }
 }
 
-task printVar() {
-    println ">> Project dir " +  project.rootDir
-}
-
 task wrapper(type: Wrapper) {
     gradleVersion = '4.0'
 }
@@ -89,6 +85,7 @@ bootRun {
 }
 
 mainClassName = 'com.tvntd.trustchain.Application'
+// mainClassName = 'com.tvntd.trustchain.plugin.TrustChainApp'
 
 springBoot {
     mainClass = 'com.tvntd.trustchain.Application'
@@ -103,6 +100,12 @@ task runMain() {
         addJvmArgIfEmpty "networkProfile", "main"
         bootRunWithNetworkConfig('main', false)
     }
+}
+
+task privNet(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.tvntd.trustchain.TrustChainApp"
+    args
 }
 
 def getDatabaseDir(String name) {
@@ -127,7 +130,8 @@ def bootRunWithNetworkConfig(String name, boolean includePresets) {
             '-DnetworkProfile=' + name]
         )
     }
-    // set heap size configure in task
+    // Set heap size configure in task
+    //
     if (!project.hasProperty('jvmArgs') || project.jvmArgs.indexOf('-Xmx') == -1) {
         println('Set default heap size for task ' + maxHeapSize)
         newArgs.add(maxHeapSize)
