@@ -7,6 +7,8 @@
  */
 package com.tvntd.trustchain.rpc;
 
+import java.util.ArrayList;
+
 import org.ethereum.jsonrpc.JsonRpc.BlockResult;
 
 import com.googlecode.jsonrpc4j.JsonRpcParam;
@@ -22,6 +24,8 @@ public interface EthereumRpc
     }
 
     Account ether_account(@JsonRpcParam(value="name") String name);
+
+    ArrayList<String> eth_listAccount();
 
     BlockResult eth_getBlockByNumber(
             @JsonRpcParam(value = "id") String bnOrId,

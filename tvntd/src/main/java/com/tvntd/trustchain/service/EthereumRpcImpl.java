@@ -7,10 +7,14 @@
  */
 package com.tvntd.trustchain.service;
 
+import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.BlockchainImpl;
+import org.ethereum.core.Genesis;
+import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
+import org.ethereum.db.ByteArrayWrapper;
 import org.ethereum.facade.Ethereum;
 import org.ethereum.jsonrpc.JsonRpc.BlockResult;
 import org.ethereum.jsonrpc.TransactionResultDTO;
@@ -21,7 +25,7 @@ import org.springframework.stereotype.Service;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import com.tvntd.trustchain.rpc.EthereumRpc;
 
-import static com.tvntd.trustchain.util.TypeConverter.*;
+import static org.ethereum.jsonrpc.TypeConverter.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,12 @@ public class EthereumRpcImpl implements EthereumRpc
     @Autowired
     BlockchainImpl blockchain;
 
+    @Autowired
+    Repository repository;
+
+    @Autowired
+    SystemProperties config;
+
     @Override
     public Account ether_account(String name)
     {
@@ -44,6 +54,17 @@ public class EthereumRpcImpl implements EthereumRpc
         account.owner = name;
         account.balance = "$1000.33";
         return account;
+    }
+
+    public ArrayList<String> eth_listAccount()
+    {
+        ArrayList<String> result = new ArrayList<>();
+        Genesis genesis = Genesis.getInstance(config);
+
+        for (ByteArrayWrapper key : genesis.getPremine().keySet()) {
+            result.add(toJsonHex(key.getData()));
+        }
+        return result;
     }
 
     public BlockResult eth_getBlockByNumber(String bnOrId, Boolean full)
