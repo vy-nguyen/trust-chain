@@ -41,17 +41,20 @@ configurations.all {
 }
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-web"
-    compile "org.springframework.boot:spring-boot-starter-websocket"
+    compile("org.springframework.boot:spring-boot-starter-websocket")
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
 
-    compile "org.springframework.security:spring-security-web:${spring_security_ver}"
-    compile "org.springframework.security:spring-security-config:${spring_security_ver}"
+    compile("org.springframework.security:spring-security-web:${spring_security_ver}")
+    compile("org.springframework.security:spring-security-config:${spring_security_ver}")
          
-    compile "javax.servlet:jstl:1.2"
-    compile "com.google.guava:guava:18.0"
-    compile "com.github.briandilley.jsonrpc4j:jsonrpc4j:1.5.2"
+    compile("javax.servlet:jstl:1.2")
+    compile("com.google.guava:guava:18.0")
+    compile("com.github.briandilley.jsonrpc4j:jsonrpc4j:1.5.2")
 
-    compile "org.ethereum:solcJ-all:0.4.8"
+    compile("org.ethereum:solcJ-all:0.4.8")
     compile(project(":ethereumj/ethereumj-core")) {
         exclude group: "log4j"
         exclude group: "org.slf4j", module: "log4j-over-slf4j"

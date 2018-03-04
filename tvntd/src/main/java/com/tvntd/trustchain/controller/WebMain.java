@@ -38,7 +38,6 @@ public class WebMain
     @RequestMapping(value = "/",  method = RequestMethod.GET)
     public String index(HttpServletRequest reqt)
     {
-        System.out.println("Return index html..........");
         return "index";
     }
 
