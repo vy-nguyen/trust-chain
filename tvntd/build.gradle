@@ -36,7 +36,8 @@ applicationDefaultJvmArgs = [
 ]
 
 configurations.all {
-    // check for updates every build
+    // Check for updates every build
+    //
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
@@ -71,7 +72,31 @@ sourceSets {
             srcDirs = [
                 'src/main/java'
             ]
+            exclude 'com/tvntd/mine/**'
         }
+    }
+    miner {
+        compileClasspath += main.output + main.compileClasspath
+        java {
+            srcDirs = [
+                'src/mine/java'
+            ]
+            exclude 'com/tvntd/trustchain/config/**'
+            exclude 'com/tvntd/trustchain/plugin/**'
+        }
+        resources {
+            srcDirs = [
+                'src/mine/resources'
+            ]
+            exclude 'src/main/resources'
+        }
+    }
+    test {
+        compileClasspath += main.output + main.compileClasspath
+        compileClasspath += miner.output + miner.compileClasspath
+        runtimeClasspath += main.output + main.compileClasspath
+        runtimeClasspath += miner.output + miner.compileClasspath
+
     }
 }
 
@@ -87,8 +112,7 @@ bootRun {
     jvmArgs = ["-server", "-Xms3g"]
 }
 
-mainClassName = 'com.tvntd.trustchain.Application'
-// mainClassName = 'com.tvntd.trustchain.plugin.TrustChainApp'
+mainClassName = 'com.tvntd.trustchain.plugin.TrustChainApp'
 
 springBoot {
     mainClass = 'com.tvntd.trustchain.Application'
@@ -103,6 +127,22 @@ task runMain() {
         addJvmArgIfEmpty "networkProfile", "main"
         bootRunWithNetworkConfig('main', false)
     }
+}
+
+task mineJar(type: Jar) {
+    from sourceSets.miner.output
+    archiveName = "${baseName}-mine.jar"
+    /*
+    manifest = project.manifest {
+        from project.sharedManifest
+    }
+    */
+}
+
+task miner(type: JavaExec) {
+    classpath = sourceSets.miner.runtimeClasspath + sourceSets.main.runtimeClasspath
+    main = "com.tvntd.mine.TrustMinnerApp"
+    args
 }
 
 task privNet(type: JavaExec) {
@@ -147,3 +187,9 @@ def bootRunWithNetworkConfig(String name, boolean includePresets) {
     tasks.compileJava.execute()
     tasks.bootRun.execute()
 }
+
+artifacts {
+    mineJar
+}
+
+jar.dependsOn mineJar

@@ -5,10 +5,13 @@
  *
  * @author vynguyen
  */
-package com.tvntd.trustchain.plugin;
+package com.tvntd.mine.config;
 
 import org.ethereum.core.Block;
 import org.ethereum.mine.MinerListener;
+import org.springframework.context.annotation.Bean;
+
+import com.tvntd.trustchain.plugin.BaseApp;
 
 public class MinerApp extends BaseApp implements MinerListener
 {
@@ -17,19 +20,33 @@ public class MinerApp extends BaseApp implements MinerListener
         m_config =
             "peer.discovery.enabled = false\n" +
             "peer.listen.port = 30300\n" +
-            "peer.privatekey = \n" +
+            // "peer.privatekey = \n" +
             "peer.networkId = 1973\n" +
-            "sync.enabled = false\n";
+            "sync.enabled = false\n" +
+            "genesis = private-genesis.json\n" +
+            "database.dir = '/Users/work/ws/data/mine/1'\n" +
+            "cache.flush.blocks = 1\n" +
+            "mine {\n" +
+            "   extraDataHex = 'cdcdcdcdcdcd'\n" +
+            "   cpuMineThreads = 2\n" +
+            "}\n";
+    }
+
+    @Bean
+    MinerApp getMinner() {
+        return new MinerApp();
     }
 
     @Override
     public void run()
     {
+        System.out.println("Run minner app...");
     }
 
     @Override
     public void miningStarted()
     {
+        System.out.println("Started minner app...");
     }
 
     @Override
@@ -45,6 +62,7 @@ public class MinerApp extends BaseApp implements MinerListener
     @Override
     public void blockMined(Block block)
     {
+        System.out.println("Block mined " + block);
     }
 
     @Override

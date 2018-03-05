@@ -13,8 +13,10 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import org.ethereum.config.SystemProperties;
+import org.ethereum.facade.Ethereum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
 import com.typesafe.config.ConfigFactory;
@@ -32,6 +34,12 @@ public class BaseApp implements Runnable
     private static CustomFilter s_filter;
 
     protected String m_config;
+
+    @Autowired
+    Ethereum ethereum;
+
+    @Autowired
+    SystemProperties config;
 
     @Bean
     public SystemProperties systemProperties()

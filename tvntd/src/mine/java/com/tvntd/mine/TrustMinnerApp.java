@@ -5,23 +5,23 @@
  *
  * @author vynguyen
  */
-package com.tvntd.trustchain;
+package com.tvntd.mine;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import com.tvntd.trustchain.config.EthereumConfig;
+import com.tvntd.mine.config.MinerApp;
 
 @SpringBootApplication
 @EnableScheduling
-public class TrustChainApp
+public class TrustMinnerApp
 {
     public static void main(String[] args) throws Exception
     {
         SpringApplication.run(new Object[] {
-            TrustChainApp.class,
-            EthereumConfig.class
+            TrustMinnerApp.class,
+            MinerApp.class
         }, args);
     }
 }
