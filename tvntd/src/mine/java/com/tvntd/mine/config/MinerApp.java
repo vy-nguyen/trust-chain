@@ -20,13 +20,13 @@ public class MinerApp extends BaseApp implements MinerListener
         m_config =
             "peer.discovery.enabled = false\n" +
             "peer.listen.port = 30301\n" +
-            // "peer.privatekey = \n" +
             "peer.networkId = 1973\n" +
             "sync.enabled = false\n" +
             "genesis = private-genesis.json\n" +
             "database.dir = '/Users/work/ws/data/mine/1'\n" +
             "cache.flush.blocks = 1\n" +
             "mine {\n" +
+            "   start = true\n" +
             "   extraDataHex = 'cdcdcdcdcdcd'\n" +
             "   cpuMineThreads = 2\n" +
             "}\n";
