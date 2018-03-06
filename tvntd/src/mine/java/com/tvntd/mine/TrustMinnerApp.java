@@ -7,21 +7,23 @@
  */
 package com.tvntd.mine;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.ethereum.facade.EthereumFactory;
+import org.springframework.context.annotation.Bean;
 
 import com.tvntd.mine.config.MinerApp;
 
-@SpringBootApplication
-@EnableScheduling
 public class TrustMinnerApp
 {
+    static class Miner extends MinerApp
+    {
+        @Bean
+        public Miner getMiner() {
+            return new Miner();
+        }
+    }
+
     public static void main(String[] args) throws Exception
     {
-        SpringApplication.run(new Object[] {
-            TrustMinnerApp.class,
-            MinerApp.class
-        }, args);
+        EthereumFactory.createEthereum(Miner.class);
     }
 }
