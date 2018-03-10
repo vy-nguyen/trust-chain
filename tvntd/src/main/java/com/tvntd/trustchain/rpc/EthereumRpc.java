@@ -17,13 +17,19 @@ import com.googlecode.jsonrpc4j.JsonRpcService;
 @JsonRpcService("/rpc/ether")
 public interface EthereumRpc
 {
-    class Account
+    class AccountDTO
     {
         public String owner;
         public String balance;
+        public String addressHex;
+        public String privateKeyHex;
     }
 
-    Account ether_account(@JsonRpcParam(value="name") String name);
+    AccountDTO ether_account(@JsonRpcParam(value="name") String name);
+    AccountDTO ether_createAccount();
+
+    String ether_getBalance(@JsonRpcParam(value="address") String address)
+                throws Exception;
 
     ArrayList<String> eth_listAccount();
 

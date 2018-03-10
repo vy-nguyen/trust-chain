@@ -20,4 +20,8 @@ public interface TvntdRpc
     }
 
     VerifyOwner tvntd_verify(@JsonRpcParam(value="name") String name);
+
+    String tvntd_trans(@JsonRpcParam(value="send") String send,
+                       @JsonRpcParam(value="recv") String recv,
+                       @JsonRpcParam(value="amount") int amount);
 }

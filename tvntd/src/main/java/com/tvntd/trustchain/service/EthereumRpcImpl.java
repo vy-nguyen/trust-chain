@@ -8,6 +8,7 @@
 package com.tvntd.trustchain.service;
 
 import org.ethereum.config.SystemProperties;
+import org.ethereum.core.Account;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.BlockchainImpl;
@@ -18,7 +19,9 @@ import org.ethereum.db.ByteArrayWrapper;
 import org.ethereum.facade.Ethereum;
 import org.ethereum.jsonrpc.JsonRpc.BlockResult;
 import org.ethereum.jsonrpc.TransactionResultDTO;
+import org.ethereum.jsonrpc.TypeConverter;
 import org.ethereum.util.ByteUtil;
+import org.spongycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +30,7 @@ import com.tvntd.trustchain.rpc.EthereumRpc;
 
 import static org.ethereum.jsonrpc.TypeConverter.*;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,15 +51,43 @@ public class EthereumRpcImpl implements EthereumRpc
     SystemProperties config;
 
     @Override
-    public Account ether_account(String name)
+    public AccountDTO ether_account(String name)
     {
-        Account account = new Account();
+        AccountDTO account = new AccountDTO();
 
         account.owner = name;
         account.balance = "$1000.33";
         return account;
     }
 
+    @Override
+    public AccountDTO ether_createAccount()
+    {
+        Account acct = new Account();
+        AccountDTO acctDto = new AccountDTO();
+
+        acct.init();
+        acctDto.addressHex = Hex.toHexString(acct.getAddress());
+        acctDto.privateKeyHex = Hex.toHexString(acct.getEcKey().getPrivKeyBytes());
+        return acctDto;
+    }
+
+    public String ether_getBalance(String address) throws Exception
+    {
+        try {
+            byte[] addrByte = TypeConverter.StringHexToByteArray(address); 
+            BigInteger balance = repository.getBalance(addrByte);
+
+            if (balance != null) {
+                return TypeConverter.toJsonHex(balance);
+            }
+        } finally {
+        }
+        System.out.println("Can't locate the balance...");
+        return "0";
+    }
+
+    @Override
     public ArrayList<String> eth_listAccount()
     {
         ArrayList<String> result = new ArrayList<>();
