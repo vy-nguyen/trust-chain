@@ -18,12 +18,8 @@ public class MinerApp extends BaseApp implements MinerListener
     {
         super();
         m_config =
-            "peer.discovery.enabled = false\n" +
-            "peer.listen.port = 30301\n" +
             "peer.networkId = 1973\n" +
-            "sync.enabled = false\n" +
             "genesis = private-genesis.json\n" +
-            "database.dir = '/Users/work/ws/data/mine/1'\n" +
             "cache.flush.blocks = 1\n" +
             "mine {\n" +
             "   start = true\n" +
@@ -47,11 +43,13 @@ public class MinerApp extends BaseApp implements MinerListener
     @Override
     public void miningStopped()
     {
+        System.out.println("Stop minner app...");
     }
 
     @Override
     public void blockMiningStarted(Block block)
     {
+        System.out.println("Start mining block minner app...");
     }
 
     @Override

@@ -40,13 +40,13 @@
 
     <logger level="WARN" name="org.springframework"/>
     <logger level="WARN" name="org.apache"/>
-    <logger level="DEBUG" name="general"/>
-    <logger level="DEBUG" name="net"/>
+    <logger level="INFO" name="general"/>
+    <logger level="INFO" name="net"/>
     <logger level="INFO" name="ethereum-service"/>
     <logger level="ERROR" name="wire"/>
-    <logger level="DEBUG" name="discover"/>
-    <logger level="DEBUG" name="db"/>
-    <logger level="TRACE" name="sync"/>
+    <logger level="INFO" name="discover"/>
+    <logger level="INFO" name="db"/>
+    <logger level="INFO" name="sync"/>
     <logger level="DEBUG" name="jsonrpc"/>
 
     <logger level="DEBUG" name="blockqueue"/>

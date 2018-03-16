@@ -17,4 +17,7 @@ public class Constants
     public static final String AuthAdmin   = "ROLE_" + Admin;
     public static final String AuthDba     = "ROLE_" + Dba;
     public static final String AuthAuditor = "ROLE_" + Auditor;
+
+    public static final String EtherRpc    = "/rpc/ether";
+    public static final String TvntdRpc    = "/rpc/tvntd";
 }

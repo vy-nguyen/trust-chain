@@ -16,7 +16,7 @@
  * along with Ethereum Harmony.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.tvntd.trustchain.util;
+package com.ethercamp.harmony.jsonrpc;
 
 import org.ethereum.util.ByteUtil;
 import org.spongycastle.util.encoders.Hex;
