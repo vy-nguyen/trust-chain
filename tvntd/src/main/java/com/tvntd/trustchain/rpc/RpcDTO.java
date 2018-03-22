@@ -7,17 +7,64 @@
  */
 package com.tvntd.trustchain.rpc;
 
+import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.List;
 
+import org.ethereum.core.AccountState;
 import org.ethereum.core.Block;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.core.Transaction;
+import org.ethereum.crypto.HashUtil;
+import org.ethereum.util.FastByteComparisons;
 import org.ethereum.vm.LogInfo;
+
+import com.tvntd.trustchain.util.Convert;
+import com.tvntd.trustchain.util.Convert.Unit;
 
 import static com.ethercamp.harmony.jsonrpc.TypeConverter.*;
 
 public interface RpcDTO
 {
+    public static class AccountStateDTO
+    {
+        public String account;
+        public String weiBalance;
+        public String etherBalance;
+        public String nonce;
+        public String stateRoot;
+        public String codeHash;
+
+        public AccountStateDTO(AccountState acct, byte[] acctRaw)
+        {
+            BigInteger balance = acct.getBalance();
+
+            account = toJsonHex(acctRaw);
+            weiBalance = toJsonHex(balance);
+            etherBalance = Convert.fromWei(balance, Unit.ETHER).toString();
+            nonce = acct.getNonce().toString(10);
+
+            byte[] stRoot = acct.getStateRoot();
+            if (FastByteComparisons.equal(stRoot, HashUtil.EMPTY_TRIE_HASH)) {
+                stateRoot = "null";
+            } else {
+                stateRoot = toJsonHex(stRoot);
+            }
+            stRoot = acct.getCodeHash();
+            if (FastByteComparisons.equal(stRoot, HashUtil.EMPTY_DATA_HASH)) {
+                codeHash = "null";
+            } else {
+                codeHash = toJsonHex(stRoot);
+            }
+        }
+    }
+
+    public static class AccountStateTrieDTO
+    {
+        public String trieDump;
+        public List<AccountStateDTO> accountState;
+    }
+
     public static class BlockResult
     {
         public String number;

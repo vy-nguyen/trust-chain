@@ -9,13 +9,12 @@ package com.tvntd.trustchain.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ethereum.config.CommonConfig;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockchainImpl;
-import org.ethereum.core.Genesis;
 import org.ethereum.core.Repository;
 import org.ethereum.crypto.ECKey;
-import org.ethereum.db.ByteArrayWrapper;
 import org.ethereum.facade.Ethereum;
 import org.ethereum.facade.SyncStatus;
 import org.ethereum.mine.BlockMiner;
@@ -28,6 +27,7 @@ import org.springframework.stereotype.Service;
 import com.ethercamp.harmony.model.Account;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import com.tvntd.trustchain.rpc.EthereumRpc;
+import com.tvntd.trustchain.rpc.RpcDTO.AccountStateTrieDTO;
 import com.tvntd.trustchain.rpc.RpcDTO.BlockElem;
 import com.tvntd.trustchain.rpc.RpcDTO.BlockResult;
 import com.tvntd.trustchain.rpc.RpcDTO.KeysDTO;
@@ -35,11 +35,9 @@ import com.tvntd.trustchain.rpc.RpcDTO.SyncReportDTO;
 import com.tvntd.trustchain.rpc.RpcDTO.SyncStatusDTO;
 import com.ethercamp.harmony.jsonrpc.TypeConverter;
 
-import static com.ethercamp.harmony.jsonrpc.TypeConverter.*;
-
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @AutoJsonRpcServiceImpl
@@ -67,6 +65,9 @@ public class EthereumRpcImpl implements EthereumRpc
 
     @Autowired
     SyncManager syncManager;
+
+    @Autowired
+    CommonConfig commonConfig; 
 
     protected long startSyncBlock;
 
@@ -100,6 +101,11 @@ public class EthereumRpcImpl implements EthereumRpc
     }
 
     @Override
+    public AccountStateTrieDTO eth_listAccounts() {
+        return etherSvc.getAllAccounts(eth, commonConfig);
+    }
+
+    @Override
     public String eth_getBalance(String address) throws Exception
     {
         byte[] addrByte = TypeConverter.StringHexToByteArray(address); 
@@ -109,18 +115,6 @@ public class EthereumRpcImpl implements EthereumRpc
             return TypeConverter.toJsonHex(balance);
         }
         return "0";
-    }
-
-    @Override
-    public ArrayList<String> eth_listAccount()
-    {
-        ArrayList<String> result = new ArrayList<>();
-        Genesis genesis = Genesis.getInstance(config);
-
-        for (ByteArrayWrapper key : genesis.getPremine().keySet()) {
-            result.add(toJsonHex(key.getData()));
-        }
-        return result;
     }
 
     @Override
@@ -146,6 +140,16 @@ public class EthereumRpcImpl implements EthereumRpc
     {
         Block block = blockchain.getBestBlock();
         return etherSvc.getBlockResult(block, true);
+    }
+
+    @Override
+    public String eth_debug()
+    {
+        Block block = blockchain.getBestBlock();
+        Repository repo = repository.getSnapshotTo(block.getStateRoot());
+
+        AtomicInteger errors = etherSvc.checkNodes(eth, commonConfig);
+        return errors.toString() + repo.toString();
     }
 
     @Override

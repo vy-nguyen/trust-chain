@@ -180,7 +180,10 @@ task privNet(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "com.tvntd.trustchain.TrustChainApp"
     maxHeapSize = "3G"
-    args
+    jvmArgs = [
+    ]
+    args = [
+    ]
 }
 
 artifacts {
