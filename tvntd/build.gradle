@@ -9,6 +9,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE")
+        classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.0")
     }
 }
 
@@ -17,9 +18,9 @@ apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'application'
+apply plugin: 'com.google.protobuf'
 
 repositories {
-
     mavenLocal()
     mavenCentral()
 
@@ -43,16 +44,40 @@ configurations.all {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-websocket")
-    compile("org.springframework.boot:spring-boot-starter-jetty")
-    compile("org.springframework.boot:spring-boot-starter-web") {
+    compile("org.springframework.boot:spring-boot-starter-jetty:2.0.0.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-web:2.0.0.RELEASE") {
         exclude module: "spring-boot-starter-tomcat"
     }
 
+    // compile("org.springframework:spring-core:${spring_version}")
+    compile("org.springframework:spring-jdbc:${spring_version}")
+    // compile("org.springframework:spring-web:${spring_version}")
+    // compile("org.springframework:spring-webmvc:${spring_version}")
     compile("org.springframework.security:spring-security-web:${spring_security_ver}")
     compile("org.springframework.security:spring-security-config:${spring_security_ver}")
+    compile("org.springframework.data:spring-data-jpa:${spring_data_jpa_version}")
+    // compile("org.springframework:spring-context-support:${spring_version}")
+    // compile("org.springframework:spring-beans:${spring_version}")
+    // compile("org.springframework:spring-tx:${spring_version}")
+    // compile("org.springframework:spring-expression:${spring_version}")
+  
+    // compile("mysql:mysql-connector-java:${mysql_connector_java_ver}")
+    // compile("org.hibernate:hibernate-core:${hibernate_version}")
+    // compile("org.hibernate:hibernate-entitymanager:${hibernate_version}")
+    compile("org.hibernate:hibernate-validator:${hibernate_validator_ver}")
+    // compile("org.passay:passay:${passay_version}")
+    // compile("commons-dbcp:commons-dbcp:${commons_dbcp_version}")
+    // compile("commons-fileupload:commons-fileupload:1.3.1")
+
+    // compile("javax.el:el-api:2.2")
+    // compile("javax.servlet:jstl:1.2")
+    // compile("javax.servlet:servlet-api:2.5")
+    // compile("javax.inject:javax.inject:${javax_inject_version}")
+    // compile("javax.mail:mail:${javax_mail_version}")
          
-    compile("javax.servlet:jstl:1.2")
+    compile("org.jsoup:jsoup:1.8.3")
     compile("com.google.guava:guava:18.0")
+    compile("com.google.protobuf:protobuf-java:${protobuf_version}")
     compile("com.github.briandilley.jsonrpc4j:jsonrpc4j:1.5.2")
 
     compile("org.ethereum:solcJ-all:0.4.8")
@@ -68,11 +93,22 @@ dependencies {
 
 sourceSets {
     main {
+        proto {
+            srcDirs = [
+                'src/main/proto'
+            ]
+        }
         java {
             srcDirs = [
                 'src/main/java'
             ]
             exclude 'com/tvntd/mine/**'
+        }
+        resources {
+            srcDirs = [
+                'src/main/resources'
+            ]
+            exclude 'src/mine/resources'
         }
     }
     miner {
@@ -97,6 +133,17 @@ sourceSets {
         runtimeClasspath += main.output + main.compileClasspath
         runtimeClasspath += miner.output + miner.compileClasspath
 
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:${protobuf_version}"
+    }
+    generateProtoTasks.generatedFilesBaseDir = "${buildDir}/generated"
+    generateProtoTasks {
+        all().each { task -> }
+        ofSourceSet('main')
     }
 }
 

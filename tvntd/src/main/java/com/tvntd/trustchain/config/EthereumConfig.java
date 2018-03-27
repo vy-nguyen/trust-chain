@@ -34,10 +34,7 @@ public class EthereumConfig extends CommonConfig
                 "trust {\n" +
                 "   block = 1024\n" +
                 "   uri = 'http://abc.com/abc/def'\n" +
-                "}\n" +
-                "peer {" +
-                "   listen.port = 30301" +
-                "}";
+                "}\n";
         }
     }
 
