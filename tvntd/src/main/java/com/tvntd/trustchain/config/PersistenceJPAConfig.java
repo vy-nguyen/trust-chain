@@ -7,7 +7,6 @@
  */
 package com.tvntd.trustchain.config;
 
-/*
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -53,16 +52,15 @@ public class PersistenceJPAConfig
     @Primary
     public LocalContainerEntityManagerFactoryBean entityManagerFactory()
     {
-        final LocalContainerEntityManagerFactoryBean em =
+        LocalContainerEntityManagerFactoryBean em =
             new LocalContainerEntityManagerFactoryBean();
 
-        em.setDataSource(dataSource());
-        em.setPackagesToScan(new String[] { "com.tvntd.trustchain.models" });
-
-        final HibernateJpaVendorAdapter vendorAdapter =
+        HibernateJpaVendorAdapter vendorAdapter =
             new HibernateJpaVendorAdapter();
 
         em.setJpaVendorAdapter(vendorAdapter);
+        em.setDataSource(dataSource());
+        em.setPackagesToScan(new String[] { "com.tvntd.trustchain.models" });
         em.setJpaProperties(additionalProperties());
         return em;
     }
@@ -84,7 +82,7 @@ public class PersistenceJPAConfig
     public JpaTransactionManager transactionManager()
     {
         final JpaTransactionManager tm = new JpaTransactionManager();
-        tm.setEntityManagerFactory(entityManagerFactory().getObject());
+        // tm.setEntityManagerFactory(entityManagerFactory().getObject());
         return tm;
     }
 
@@ -107,5 +105,3 @@ public class PersistenceJPAConfig
         return props;
     }
 }
-
-*/
