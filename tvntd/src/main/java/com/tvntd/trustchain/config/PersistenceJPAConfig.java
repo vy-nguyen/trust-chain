@@ -32,10 +32,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     "classpath:persistence.properties"
 })
 @ComponentScan({
-    "com.tvntd.trustchain.models"
+    "com.tvntd.trustchain.dbase.models"
 })
 @EnableJpaRepositories(
-    basePackages = "com.tvntd.trustchain.models.dao",
+    basePackages = "com.tvntd.trustchain.dbase.dao",
     entityManagerFactoryRef = "entityManagerFactory",
     transactionManagerRef = "transactionManager"
 )
@@ -60,7 +60,9 @@ public class PersistenceJPAConfig
 
         em.setJpaVendorAdapter(vendorAdapter);
         em.setDataSource(dataSource());
-        em.setPackagesToScan(new String[] { "com.tvntd.trustchain.models" });
+        em.setPackagesToScan(new String[] {
+            "com.tvntd.trustchain.dbase.models"
+        });
         em.setJpaProperties(additionalProperties());
         return em;
     }
@@ -74,6 +76,7 @@ public class PersistenceJPAConfig
         dataSource.setUrl(env.getProperty("jdbc.url"));
         dataSource.setUsername(env.getProperty("jdbc.user"));
         dataSource.setPassword(env.getProperty("jdbc.pass"));
+        dataSource.
         return dataSource;
     }
 
@@ -82,7 +85,7 @@ public class PersistenceJPAConfig
     public JpaTransactionManager transactionManager()
     {
         final JpaTransactionManager tm = new JpaTransactionManager();
-        // tm.setEntityManagerFactory(entityManagerFactory().getObject());
+        tm.setEntityManagerFactory(entityManagerFactory().getObject());
         return tm;
     }
 

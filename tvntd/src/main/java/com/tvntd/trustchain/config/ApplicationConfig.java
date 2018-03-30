@@ -22,9 +22,10 @@ import org.springframework.web.servlet.view.JstlView;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {
-    "com.tvntd.controller",
-    "com.tvntd.service",
-    "com.tvntd.security"
+    "com.tvntd.trustchain.controller",
+    "com.tvntd.trustchain.service",
+    "com.tvntd.trustchain.dbase.service",
+    "com.tvntd.trustchain.security"
 })
 public class ApplicationConfig extends WebMvcConfigurerAdapter
 {
