@@ -76,7 +76,6 @@ public class PersistenceJPAConfig
         dataSource.setUrl(env.getProperty("jdbc.url"));
         dataSource.setUsername(env.getProperty("jdbc.user"));
         dataSource.setPassword(env.getProperty("jdbc.pass"));
-        dataSource.
         return dataSource;
     }
 
