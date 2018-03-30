@@ -10,6 +10,8 @@ package com.tvntd.trustchain;
 import org.ethereum.facade.Ethereum;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,6 +19,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import com.tvntd.trustchain.config.EthereumConfig;
 
 @SpringBootApplication
+@EnableConfigurationProperties
+@EntityScan(basePackages = {
+    "com.tvntd.trustchain.dbase.models"
+}) 
 @EnableScheduling
 @Import({
     EthereumConfig.class

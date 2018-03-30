@@ -10,9 +10,11 @@ package com.tvntd.trustchain.dbase.dao;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.tvntd.trustchain.dbase.models.AccountKey;
 
+@Repository
 public interface AccountKeyRepo extends JpaRepository<AccountKey, String>
 {
     AccountKey findByAccount(String account);

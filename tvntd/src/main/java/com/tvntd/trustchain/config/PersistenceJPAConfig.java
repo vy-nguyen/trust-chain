@@ -7,6 +7,7 @@
  */
 package com.tvntd.trustchain.config;
 
+/*
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -61,7 +62,7 @@ public class PersistenceJPAConfig
         em.setJpaVendorAdapter(vendorAdapter);
         em.setDataSource(dataSource());
         em.setPackagesToScan(new String[] {
-            "com.tvntd.trustchain.dbase.models"
+            "com.tvntd.trustchain.dbase"
         });
         em.setJpaProperties(additionalProperties());
         return em;
@@ -97,13 +98,23 @@ public class PersistenceJPAConfig
     final Properties additionalProperties()
     {
         Properties props = new Properties();
-        props.setProperty("hibernate.hbm2ddl.auto",
-                env.getProperty("hibernate.hbm2ddl.auto"));
-        props.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
-        props.put("hibernate.connection.CharSet", "utf-8");
-        props.put("hibernate.connection.useUnicode", true);
-        props.put("hibernate.connection.characterEncoding", "utf-8");
+        String[] keys = {
+            "spring.jpa.hibernate.ddl-auto",
+            "spring.jpa.database",
+            "spring.datasource.url",
+            "spring.datasource.driver-class-name",
+            "spring.jpa.properties.hibernate.dialect"
+            // "hibernate.dialect",
+            // "hibernate.connection.useUnicode",
+            // "hibernate.connection.charSet",
+            // "hibernate.connection.characterEncoding"
+        };
 
+        props.setProperty("spring.jpa.show-sql", "false");
+        for (String s : keys) {
+            props.setProperty(s, env.getProperty(s));
+        }
         return props;
     }
 }
+*/

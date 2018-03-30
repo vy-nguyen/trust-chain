@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
+import com.tvntd.trustchain.dbase.access.IAccountKey;
 import com.tvntd.trustchain.rpc.TvntdRpc;
 
 @Service
@@ -27,6 +28,9 @@ public class TvntdRpcImpl implements TvntdRpc
 {
     @Autowired
     protected Ethereum ethereum;
+
+    @Autowired
+    IAccountKey acctKey;
 
     @Override
     public VerifyOwner tvntd_verify(String name)
@@ -37,6 +41,13 @@ public class TvntdRpcImpl implements TvntdRpc
         ver.userUuid = UUID.randomUUID().toString();
         System.out.println("Invoke verify..." + name);
         return ver;
+    }
+
+    @Override
+    public String tvntd_saveKey(String account, String key)
+    {
+        acctKey.saveAccount(account, key, UUID.randomUUID().toString());
+        return "ok";
     }
 
     @Override

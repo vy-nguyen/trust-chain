@@ -51,5 +51,7 @@ public class AccountKeySvc implements IAccountKey
     @Override
     public void saveAccount(String account, String privKey, String ownerUuid)
     {
+        System.out.println("Save account " + account + " uuid " + ownerUuid);
+        keyRepo.save(new AccountKey(account, ownerUuid, privKey));
     }
 }
