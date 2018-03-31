@@ -13,22 +13,38 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "transaction")
 public class Transaction
 {
     @Id
-    @Column(length = 64)
+    @Column(length = 64, name = "owner_uuid")
     protected String ownerUuid;
 
     @Column(length = 64)
     protected String account;
 
-    @Column(length = 64)
+    @Column(length = 64, name = "peer_account")
+    protected String peerAccount;
+
+    @Column(length = 64, name = "block_hash")
     protected String blockHash;
 
+    @Column(name = "block_number")
     protected Long blockNumber;
 
+    protected Long amount;
+
     public Transaction() {}
+    public Transaction(String uuid, String owner,
+            String peer, Long amount, String hash, Long block)
+    {
+        this.ownerUuid = uuid;
+        this.account = owner;
+        this.peerAccount = peer;
+        this.blockHash = hash;
+        this.blockNumber = block;
+        this.amount = amount;
+    }
 
     /**
      * @return the ownerUuid

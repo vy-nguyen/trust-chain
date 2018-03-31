@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tvntd.trustchain.dbase.access.IAccountKey;
 import com.tvntd.trustchain.dbase.dao.AccountKeyRepo;
 import com.tvntd.trustchain.dbase.models.AccountKey;
+import com.tvntd.trustchain.trans.dao.TransactionRepo;
+import com.tvntd.trustchain.trans.models.Transaction;
 
 import static com.ethercamp.harmony.jsonrpc.TypeConverter.toJsonHex;
 
@@ -27,6 +29,9 @@ public class AccountKeySvc implements IAccountKey
 {
     @Autowired
     protected AccountKeyRepo keyRepo;
+
+    @Autowired
+    protected TransactionRepo transRepo;
 
     @Override
     public AccountKey getAccount(String account)
@@ -62,5 +67,7 @@ public class AccountKeySvc implements IAccountKey
         System.out.println("Save account " + account + " uuid " + ownerUuid +
                 ", verify " + verif);
         keyRepo.save(new AccountKey(account, ownerUuid, privKey));
+        transRepo.save(new Transaction(ownerUuid, account,
+                    account, 1000L, privKey, 1000L));
     }
 }
