@@ -9,6 +9,8 @@ package com.tvntd.trustchain.dbase.service;
 
 import java.util.List;
 
+import org.ethereum.crypto.ECKey;
+import org.spongycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tvntd.trustchain.dbase.access.IAccountKey;
 import com.tvntd.trustchain.dbase.dao.AccountKeyRepo;
 import com.tvntd.trustchain.dbase.models.AccountKey;
+
+import static com.ethercamp.harmony.jsonrpc.TypeConverter.toJsonHex;
 
 @Service
 @Transactional
@@ -51,7 +55,12 @@ public class AccountKeySvc implements IAccountKey
     @Override
     public void saveAccount(String account, String privKey, String ownerUuid)
     {
-        System.out.println("Save account " + account + " uuid " + ownerUuid);
+        ECKey key = ECKey.fromPrivate(Hex.decode(privKey));
+        byte[] pub = key.getAddress();
+        String verif = toJsonHex(pub);
+
+        System.out.println("Save account " + account + " uuid " + ownerUuid +
+                ", verify " + verif);
         keyRepo.save(new AccountKey(account, ownerUuid, privKey));
     }
 }

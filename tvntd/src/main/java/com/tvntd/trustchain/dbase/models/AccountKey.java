@@ -15,12 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-
 @Entity
-@EnableAutoConfiguration
-@Table(indexes = {
-    @Index(columnList = "ownerUuid", unique = false)
+@Table(name = "account_key", indexes = {
+    @Index(columnList = "owner_uuid", unique = false)
 })
 public class AccountKey
 {
@@ -28,13 +25,13 @@ public class AccountKey
     @Column(length = 64)
     private String account;
 
-    @Column(length = 64)
+    @Column(length = 64, name = "owner_uuid")
     private String ownerUuid;
 
-    @Column(length = 64)
+    @Column(length = 64, name = "key_password")
     private byte[] keyPassword;
 
-    @Column(length = 512)
+    @Column(length = 512, name = "priv_key")
     private byte[] privKey;
 
     public AccountKey() {}

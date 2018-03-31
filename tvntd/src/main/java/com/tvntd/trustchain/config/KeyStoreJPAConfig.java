@@ -16,6 +16,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -25,34 +26,37 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-    entityManagerFactoryRef = "vntdEntityMgrFactory",
-    transactionManagerRef = "vntdTransMgr",
+    entityManagerFactoryRef = "keyStoreEntityMgrFactory",
+    transactionManagerRef = "keyStoreTransMgr",
     basePackages = {
-        "com.tvntd.trustchain.trans.dao"
+        "com.tvntd.trustchain.dbase.dao"
     }
 )
-public class PersistenceJPAConfig
+public class KeyStoreJPAConfig
 {
-    @Bean(name = "vntdDataSource")
-    @ConfigurationProperties(prefix = "vntd.datasource")
+    @Primary
+    @Bean(name = "dataSource")
+    @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean
-    public LocalContainerEntityManagerFactoryBean vntdEntityMgrFactory(
+    @Primary
+    @Bean(name = "keyStoreEntityMgrFactory")
+    public LocalContainerEntityManagerFactoryBean keyStoreEntityMgrFactory(
             EntityManagerFactoryBuilder builder,
-            @Qualifier("vntdDataSource") DataSource dataSource)
+            @Qualifier("dataSource") DataSource dataSource)
     {
         return builder.dataSource(dataSource)
-            .packages("com.tvntd.trustchain.trans.models")
-            .persistenceUnit("account")
+            .packages("com.tvntd.trustchain.dbase.models")
+            .persistenceUnit("keystore")
             .build();
     }
 
-    @Bean
-    public PlatformTransactionManager vntdTransMgr(
-            @Qualifier("vntdEntityMgrFactory") EntityManagerFactory entityMgrFactory)
+    @Primary
+    @Bean(name = "keyStoreTransMgr")
+    public PlatformTransactionManager keyStoreTransMgr(
+            @Qualifier("keyStoreEntityMgrFactory") EntityManagerFactory entityMgrFactory)
     {
         return new JpaTransactionManager(entityMgrFactory);
     }

@@ -25,6 +25,7 @@ import org.springframework.web.servlet.view.JstlView;
     "com.tvntd.trustchain.controller",
     "com.tvntd.trustchain.service",
     "com.tvntd.trustchain.dbase.service",
+    "com.tvntd.trustchain.trans.service",
     "com.tvntd.trustchain.security"
 })
 public class ApplicationConfig extends WebMvcConfigurerAdapter
