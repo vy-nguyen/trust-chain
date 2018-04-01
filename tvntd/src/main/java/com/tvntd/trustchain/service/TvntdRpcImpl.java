@@ -44,9 +44,9 @@ public class TvntdRpcImpl implements TvntdRpc
     }
 
     @Override
-    public String tvntd_saveKey(String account, String key)
+    public String tvntd_saveKey(String key)
     {
-        acctKey.saveAccount(account, key, UUID.randomUUID().toString());
+        acctKey.saveAccount(key, "abc123", UUID.randomUUID().toString());
         return "ok";
     }
 

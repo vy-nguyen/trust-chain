@@ -33,6 +33,17 @@ public final class Convert
         return number.multiply(unit.getWeiFactor());
     }
 
+    public static float elapseMilli(long start, String out)
+    {
+        long end = System.nanoTime();
+        float ret = (end - start) / 1000000;
+
+        if (out != null) {
+            System.out.println(out + " (" + ret + ") msec");
+        }
+        return ret;
+    }
+
     public enum Unit
     {
         WEI("wei", 0),

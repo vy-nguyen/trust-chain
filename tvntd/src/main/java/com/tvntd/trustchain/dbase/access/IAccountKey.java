@@ -19,7 +19,7 @@ public interface IAccountKey
     List<AccountKey> getAllAccountsByOwner(String ownerUuid);
     List<AccountKey> getAccountByOwners(List<String> ownerUuids);
 
-    void saveAccount(String account, String privKey, String ownerUuid);
+    void saveAccount(String privKey, String password, String ownerUuid);
 
     public static class AccountKeyDTO
     {

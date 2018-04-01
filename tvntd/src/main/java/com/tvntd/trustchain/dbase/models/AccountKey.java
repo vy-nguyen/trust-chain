@@ -7,13 +7,13 @@
  */
 package com.tvntd.trustchain.dbase.models;
 
-import java.nio.charset.Charset;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
+
+import com.google.common.base.Charsets;
 
 @Entity
 @Table(name = "account_key", indexes = {
@@ -35,12 +35,16 @@ public class AccountKey
     private byte[] privKey;
 
     public AccountKey() {}
-    public AccountKey(String account, String ownerUuid, String key)
+    public AccountKey(String account, String ownerUuid, String key) {
+        this(account, ownerUuid, key.getBytes(Charsets.UTF_8));
+    }
+
+    public AccountKey(String account, String ownerUuid, byte[] key)
     {
         this.account = account;
         this.ownerUuid = ownerUuid;
         this.keyPassword = null;
-        this.privKey = key.getBytes(Charset.forName("UTF-8"));
+        this.privKey = key;
     }
 
     /**

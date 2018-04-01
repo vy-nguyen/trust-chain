@@ -15,11 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tvntd.crypto.proto.KS;
 import com.tvntd.trustchain.dbase.access.IAccountKey;
 import com.tvntd.trustchain.dbase.dao.AccountKeyRepo;
 import com.tvntd.trustchain.dbase.models.AccountKey;
+import com.tvntd.trustchain.security.KeyEncryption;
 import com.tvntd.trustchain.trans.dao.TransactionRepo;
-import com.tvntd.trustchain.trans.models.Transaction;
 
 import static com.ethercamp.harmony.jsonrpc.TypeConverter.toJsonHex;
 
@@ -58,16 +59,20 @@ public class AccountKeySvc implements IAccountKey
     }
 
     @Override
-    public void saveAccount(String account, String privKey, String ownerUuid)
+    public void saveAccount(String privKey, String password, String ownerUuid)
     {
         ECKey key = ECKey.fromPrivate(Hex.decode(privKey));
-        byte[] pub = key.getAddress();
-        String verif = toJsonHex(pub);
+        byte[] pubKey = key.getAddress();
+        String account = toJsonHex(pubKey);
+        KS.KeystoreItem item = KeyEncryption.encryptKey(key, ownerUuid, password);
 
-        System.out.println("Save account " + account + " uuid " + ownerUuid +
-                ", verify " + verif);
-        keyRepo.save(new AccountKey(account, ownerUuid, privKey));
-        transRepo.save(new Transaction(ownerUuid, account,
-                    account, 1000L, privKey, 1000L));
+        keyRepo.save(new AccountKey(account, ownerUuid, item.toByteArray()));
+        AccountKey actKey = keyRepo.findByAccount(account);
+        if (actKey != null) {
+            ECKey dup = KeyEncryption.decryptKey(actKey.getPrivKey(), password);
+            if (!dup.equals(key)) {
+                System.out.println("BUG!");
+            }
+        }
     }
 }

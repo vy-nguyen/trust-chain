@@ -21,9 +21,7 @@ public interface TvntdRpc
 
     VerifyOwner tvntd_verify(@JsonRpcParam(value="name") String name);
 
-    String tvntd_saveKey(
-            @JsonRpcParam(value="account") String account,
-            @JsonRpcParam(value="key") String key);
+    String tvntd_saveKey(@JsonRpcParam(value="key") String key);
 
     String tvntd_trans(
             @JsonRpcParam(value="send") String send,

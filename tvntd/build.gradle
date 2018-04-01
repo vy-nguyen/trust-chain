@@ -88,7 +88,8 @@ sourceSets {
         }
         java {
             srcDirs = [
-                'src/main/java'
+                'src/main/java',
+                "${buildDir}/generated/main/java"
             ]
             exclude 'com/tvntd/mine/**'
         }
