@@ -77,6 +77,13 @@ dependencies {
     }
     compile files(new File(project.rootDir,
         "/ethereumj/ethereumj-core/build/libs/ethereumj-core-1.6.3-SNAPSHOT.jar"))
+
+    testCompile "org.springframework:spring-test:${spring_version}"
+    testCompile "org.hamcrest:hamcrest-core:${hamcrest_version}"
+    testCompile "org.hamcrest:hamcrest-library:${hamcrest_version}"
+    testCompile "junit:junit:${junit_version}"
+    // testRuntime "org.mortbay.jetty:jetty-runner:7.5.4.v20111024"
+    testRuntime "org.mortbay.jetty:jetty-runner:8.1.15.v20140411"
 }
 
 sourceSets {
@@ -104,7 +111,8 @@ sourceSets {
         compileClasspath += main.output + main.compileClasspath
         java {
             srcDirs = [
-                'src/mine/java'
+                'src/mine/java',
+                "${buildDir}/generated/main/java"
             ]
             exclude 'com/tvntd/trustchain/config/**'
             exclude 'com/tvntd/trustchain/plugin/**'
@@ -119,9 +127,17 @@ sourceSets {
     test {
         compileClasspath += main.output + main.compileClasspath
         compileClasspath += miner.output + miner.compileClasspath
-        runtimeClasspath += main.output + main.compileClasspath
-        runtimeClasspath += miner.output + miner.compileClasspath
-
+        java {
+            srcDirs = [
+                'src/test/java'
+            ]
+        }
+        resources {
+            srcDirs = [
+                'src/test/resources'
+            ]
+            exclude 'src/main/resources'
+        }
     }
 }
 

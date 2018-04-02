@@ -10,6 +10,7 @@
  */
 package com.tvntd.trustchain.security;
 
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -40,7 +41,7 @@ public class KeyEncryption
 {
     protected static Logger s_log = LoggerFactory.getLogger("tvntd");
 
-    protected static final int s_scryptN = 16384; // 262144;
+    protected static final int s_scryptN = 4096; // 262144;
     protected static final int s_scryptR = 8;
     protected static final int s_scryptP = 1;
     protected static final int s_scryptDklen = 32;
@@ -48,9 +49,14 @@ public class KeyEncryption
 
     public static KS.KeystoreItem encryptKey(ECKey key, String uuid, String password)
     {
+        byte[] passwd = (password == null) ?
+            sha3(key.getAddress(), uuid.getBytes(StandardCharsets.UTF_8)) :
+            password.getBytes(StandardCharsets.UTF_8);
+
         byte[] salt = genRandomBytes(s_scryptDklen);
-        byte[] derivedKey = SCrypt.generate(password.getBytes(), salt,
+        byte[] derivedKey = SCrypt.generate(passwd, salt,
                 s_scryptN, s_scryptR, s_scryptP, s_scryptDklen);
+
         byte[] iv = genRandomBytes(16);
         byte[] privKey = key.getPrivKeyBytes();
         byte[] encryptKey = Arrays.copyOfRange(derivedKey, 0, 16);
@@ -78,26 +84,21 @@ public class KeyEncryption
         crypb.setCipherparams(cparamb.build());
         crypb.setKdfparams(kdfpb.build());
 
-        itemb.setId(uuid);
         itemb.setVersion(s_encodeVer);
         itemb.setCrypto(crypb.build());
         return itemb.build();
     }
 
-    public static ECKey decryptKey(String content, String password)
+    public static ECKey
+    decryptKey(byte[] content, byte[] address, String uuid, String password)
     {
-        KS.KeystoreItem item = fromHexString(content);
-        if (item != null) {
-            return decryptKey(item, password);
-        }
-        return null;
-    }
+        byte[] passwd = (password == null) ?
+            sha3(address, uuid.getBytes(StandardCharsets.UTF_8)) :
+            password.getBytes(StandardCharsets.UTF_8);
 
-    public static ECKey decryptKey(byte[] content, String password)
-    {
         try {
             KS.KeystoreItem item = KS.KeystoreItem.parser().parseFrom(content);
-            return decryptKey(item, password);
+            return decryptKey(item, passwd);
 
         } catch(InvalidProtocolBufferException e) {
             s_log.info("Failed to parse " + e.getMessage());
@@ -105,7 +106,7 @@ public class KeyEncryption
         }
     }
 
-    protected static ECKey decryptKey(KS.KeystoreItem item, String password)
+    protected static ECKey decryptKey(KS.KeystoreItem item, byte[] password)
     {
         KS.KeystoreCrypto crypto = item.getCrypto();
         byte[] cipherKey = null;
@@ -181,10 +182,10 @@ public class KeyEncryption
         return bytes;
     }
 
-    protected static byte[] checkMacScrypt(KS.KeystoreCrypto crypto, String password)
+    protected static byte[] checkMacScrypt(KS.KeystoreCrypto crypto, byte[] password)
     {
         KS.KdfParams kdfparam = crypto.getKdfparams();
-        byte[] h = SCrypt.generate(password.getBytes(),
+        byte[] h = SCrypt.generate(password,
                 kdfparam.getSalt().toByteArray(),
                 kdfparam.getN(), kdfparam.getR(),
                 kdfparam.getP(), kdfparam.getDklen());
@@ -204,6 +205,16 @@ public class KeyEncryption
         MessageDigest keccak = new Keccak.Digest256();
         keccak.reset();
         keccak.update(h);
+        return keccak.digest();
+    }
+
+    public static byte[] sha3(byte[] ...data)
+    {
+        MessageDigest keccak = new Keccak.Digest256();
+        keccak.reset();
+        for (byte[] s : data) {
+            keccak.update(s);
+        }
         return keccak.digest();
     }
 }

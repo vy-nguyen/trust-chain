@@ -9,6 +9,7 @@ package com.tvntd.trustchain.dbase.service;
 
 import java.util.List;
 
+import org.ethereum.core.Transaction;
 import org.ethereum.crypto.ECKey;
 import org.spongycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,25 +36,52 @@ public class AccountKeySvc implements IAccountKey
     protected TransactionRepo transRepo;
 
     @Override
-    public AccountKey getAccount(String account)
-    {
-        return null;
+    public AccountKey getAccount(String account) {
+        return keyRepo.findByAccount(account);
     }
 
     @Override
-    public AccountKey getAccountByOwner(String ownerUuid)
-    {
-        return null;
+    public AccountKey getAccountByOwner(String ownerUuid) {
+        return keyRepo.findByOwnerUuid(ownerUuid);
     }
 
     @Override
-    public List<AccountKey> getAllAccountsByOwner(String ownerUuid)
-    {
-        return null;
+    public List<AccountKey> getAllAccountsByOwner(String ownerUuid) {
+        return keyRepo.findAllByOwnerUuid(ownerUuid);
     }
 
     @Override
-    public List<AccountKey> getAccountByOwners(List<String> ownerUuids)
+    public List<AccountKey> getAccountByOwners(List<String> ownerUuids) {
+        return keyRepo.findByOwnerUuidIn(ownerUuids);
+    }
+
+    /**
+     * TODO: find ways to encode password.
+     */
+    @Override
+    public ECKey getPrivateKey(String ownerUuid, String accountHex)
+    {
+        AccountKey key = keyRepo.findByAccount(accountHex);
+        if (key == null) {
+            return null;
+        }
+        byte[] account = Hex.decode(accountHex);
+        return KeyEncryption.decryptKey(key.getPrivKey(), account, ownerUuid, null);
+    }
+
+    @Override
+    public ECKey getPrivateKey(String ownerUuid, byte[] account)
+    {
+        AccountKey key = keyRepo.findByAccount(toJsonHex(account));
+        if (key == null) {
+            return null;
+        }
+        return KeyEncryption.decryptKey(key.getPrivKey(), account, ownerUuid, null);
+    }
+
+    @Override
+    public Transaction signTransaction(int nonce, int txFee, int maxFee, int amount,
+            String fromUuid, String fromAcct, String recvAcct, byte[] data)
     {
         return null;
     }
@@ -64,15 +92,15 @@ public class AccountKeySvc implements IAccountKey
         ECKey key = ECKey.fromPrivate(Hex.decode(privKey));
         byte[] pubKey = key.getAddress();
         String account = toJsonHex(pubKey);
-        KS.KeystoreItem item = KeyEncryption.encryptKey(key, ownerUuid, password);
+        KS.KeystoreItem item = KeyEncryption.encryptKey(key, ownerUuid, null);
 
         keyRepo.save(new AccountKey(account, ownerUuid, item.toByteArray()));
-        AccountKey actKey = keyRepo.findByAccount(account);
-        if (actKey != null) {
-            ECKey dup = KeyEncryption.decryptKey(actKey.getPrivKey(), password);
-            if (!dup.equals(key)) {
-                System.out.println("BUG!");
-            }
-        }
+    }
+
+    @Override
+    public void deleteAccount(byte[] account)
+    {
+        String dbkey = toJsonHex(account);
+        keyRepo.delete(dbkey);
     }
 }

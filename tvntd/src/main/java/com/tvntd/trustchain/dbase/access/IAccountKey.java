@@ -9,6 +9,9 @@ package com.tvntd.trustchain.dbase.access;
 
 import java.util.List;
 
+import org.ethereum.core.Transaction;
+import org.ethereum.crypto.ECKey;
+
 import com.tvntd.trustchain.dbase.models.AccountKey;
 
 public interface IAccountKey
@@ -19,7 +22,14 @@ public interface IAccountKey
     List<AccountKey> getAllAccountsByOwner(String ownerUuid);
     List<AccountKey> getAccountByOwners(List<String> ownerUuids);
 
+    ECKey getPrivateKey(String ownerUuid, byte[] account);
+    ECKey getPrivateKey(String ownerUuid, String accountHex);
+
+    Transaction signTransaction(int nonce, int txFee, int maxFee, int amount,
+            String fromUuid, String fromAcct, String recvAcct, byte[] data);
+
     void saveAccount(String privKey, String password, String ownerUuid);
+    void deleteAccount(byte[] account);
 
     public static class AccountKeyDTO
     {

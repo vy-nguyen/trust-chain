@@ -28,9 +28,6 @@ public class AccountKey
     @Column(length = 64, name = "owner_uuid")
     private String ownerUuid;
 
-    @Column(length = 64, name = "key_password")
-    private byte[] keyPassword;
-
     @Column(length = 512, name = "priv_key")
     private byte[] privKey;
 
@@ -43,7 +40,6 @@ public class AccountKey
     {
         this.account = account;
         this.ownerUuid = ownerUuid;
-        this.keyPassword = null;
         this.privKey = key;
     }
 
@@ -73,20 +69,6 @@ public class AccountKey
      */
     public void setOwnerUuid(String ownerUuid) {
         this.ownerUuid = ownerUuid;
-    }
-
-    /**
-     * @return the keyPassword
-     */
-    public byte[] getKeyPassword() {
-        return keyPassword;
-    }
-
-    /**
-     * @param keyPassword the keyPassword to set
-     */
-    public void setKeyPassword(byte[] keyPassword) {
-        this.keyPassword = keyPassword;
     }
 
     /**
